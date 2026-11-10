@@ -29,7 +29,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
     </div>
     <div class="flex gap-2">
       <button id="student-mode" onclick="activateStudentMode()" class="px-3 py-2 rounded-xl bg-orange-800 text-white text-xs font-bold">Siswa</button>
-      <button id="teacher-mode" onclick="promptTeacherAuth()" class="px-3 py-2 rounded-xl bg-stone-100 text-stone-700 text-xs font-bold">Guru</button>
+      <button id="teacher-mode" onclick="openPasswordModal('teacher')" class="px-3 py-2 rounded-xl bg-stone-100 text-stone-700 text-xs font-bold hover:bg-stone-200">Guru</button>
     </div>
   </div>
 </header>
@@ -100,7 +100,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
         <div>
           <div class="text-xs uppercase tracking-widest font-extrabold text-orange-800">Evaluasi Formatif Mandiri (KKM: 75)</div>
           <h2 class="display text-2xl font-bold">Evaluasi Kasus · Sistem CAT</h2>
-          <p class="text-xs text-stone-500 mt-1">Pilih jawaban untuk otomatis lanjut. Jawaban dan nilai otomatis tersimpan ke server Google Sheets guru.</p>
+          <p class="text-xs text-stone-500 mt-1">Pilih nama Anda di bawah. Hasil evaluasi otomatis tersimpan ke server database Google Sheets guru.</p>
         </div>
         <div class="text-right">
           <div id="quiz-progress-text" class="text-sm font-extrabold text-orange-900">Soal 1 dari 25</div>
@@ -109,9 +109,35 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
           </div>
         </div>
       </div>
+
+      <!-- INPUT IDENTITAS: DROPDOWN NAMA SESUAI SPREADSHEET & KELAS OTOMATIS XII -->
       <div class="grid sm:grid-cols-2 gap-3 mt-4">
-        <input id="quiz-nama" class="border border-stone-300 rounded-xl p-3 text-sm focus:outline-orange-700" placeholder="Nama Lengkap Siswa *">
-        <input id="quiz-kelas" class="border border-stone-300 rounded-xl p-3 text-sm focus:outline-orange-700" placeholder="Kelas / Rombel *">
+        <div>
+          <label class="text-xs font-bold text-stone-500 block mb-1">PILIH NAMA SISWA *</label>
+          <select id="quiz-nama" class="w-full border border-stone-300 rounded-xl p-3 text-sm font-semibold focus:outline-orange-700 bg-white">
+            <option value="">-- Pilih Nama Siswa Terdaftar --</option>
+            <option value="ACHMAD SARIPUDIN">ACHMAD SARIPUDIN</option>
+            <option value="ARJAYATI">ARJAYATI</option>
+            <option value="Elkawati">Elkawati</option>
+            <option value="Frida Dwi Yulianita">Frida Dwi Yulianita</option>
+            <option value="Hubbillah Pauzan">Hubbillah Pauzan</option>
+            <option value="Muhammad Iwin Saputra">Muhammad Iwin Saputra</option>
+            <option value="Muhammad Ridhoni">Muhammad Ridhoni</option>
+            <option value="NISA ULJANNAH">NISA ULJANNAH</option>
+            <option value="NOR ANISA">NOR ANISA</option>
+            <option value="NORHIDAYAH">NORHIDAYAH</option>
+            <option value="Raga Sukma">Raga Sukma</option>
+            <option value="RASYID HIDAYAT">RASYID HIDAYAT</option>
+            <option value="Siti Mawar">Siti Mawar</option>
+            <option value="Sri Juwita">Sri Juwita</option>
+            <option value="Suriadi">Suriadi</option>
+            <option value="Yuliya Rahmah">Yuliya Rahmah</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-stone-500 block mb-1">KELAS / ROMBEL</label>
+          <input id="quiz-kelas" class="w-full border border-stone-300 rounded-xl p-3 text-sm font-bold bg-stone-100 text-stone-700 cursor-not-allowed" value="XII" readonly>
+        </div>
       </div>
     </div>
 
@@ -186,7 +212,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
   <div id="tab-refleksi" class="hidden space-y-5">
     <div class="panel p-6 space-y-4">
       <div><div class="text-xs uppercase tracking-widest font-extrabold text-orange-800">Refleksi Pembelajaran</div><h2 class="display text-2xl font-bold">Apa yang Saya Pelajari?</h2></div>
-      <div class="grid sm:grid-cols-2 gap-3"><input id="ref-nama" class="border rounded-xl p-3 text-sm" placeholder="Nama siswa"><input id="ref-kelas" class="border rounded-xl p-3 text-sm" placeholder="Kelas"></div>
+      <div class="grid sm:grid-cols-2 gap-3"><input id="ref-nama" class="border rounded-xl p-3 text-sm" placeholder="Nama siswa"><input id="ref-kelas" class="border rounded-xl p-3 text-sm" value="XII" readonly></div>
       <label class="block text-sm font-bold">1. Tiga hal penting yang saya pahami</label><textarea id="ref-3" rows="3" class="w-full border rounded-xl p-3 text-sm" placeholder="Tuliskan tiga hal..."></textarea>
       <label class="block text-sm font-bold">2. Dua hal yang masih ingin saya pelajari</label><textarea id="ref-2" rows="2" class="w-full border rounded-xl p-3 text-sm" placeholder="Tuliskan dua hal..."></textarea>
       <label class="block text-sm font-bold">3. Satu contoh fenomena budaya di sekitar saya</label><textarea id="ref-1" rows="2" class="w-full border rounded-xl p-3 text-sm" placeholder="Ceritakan contoh..."></textarea>
@@ -195,7 +221,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
   </div>
 </section>
 
-<!-- TEACHER SECTION (DATA DIAMBIL DARI GOOGLE SHEETS) -->
+<!-- TEACHER SECTION -->
 <section id="teacher-section" class="hidden space-y-5">
   <div class="panel p-6">
     <div class="flex flex-wrap justify-between gap-3 items-center">
@@ -253,12 +279,40 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
 </section>
 </main>
 
+<!-- MODAL PASSWORD DENGAN FITUR SHOW / HIDE PASSWORD -->
+<div id="password-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm p-4 flex items-center justify-center">
+  <div class="bg-white rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl border border-stone-200">
+    <div class="flex items-center justify-between border-b pb-3">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-lock text-orange-800 text-lg"></i>
+        <h3 id="modal-pwd-title" class="font-extrabold text-stone-900 text-base">Verifikasi Password</h3>
+      </div>
+      <button onclick="closePasswordModal()" class="text-stone-400 hover:text-stone-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <p id="modal-pwd-desc" class="text-xs text-stone-500 leading-relaxed">Masukkan kode sandi otorisasi guru untuk melanjutkan.</p>
+
+    <div class="relative">
+      <input id="modal-password-input" type="password" class="w-full border border-stone-300 rounded-xl p-3 pr-10 text-sm focus:outline-orange-700" placeholder="Ketik kata sandi...">
+      <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-sm focus:outline-none">
+        <i id="pwd-eye-icon" class="fa-solid fa-eye"></i>
+      </button>
+    </div>
+
+    <div id="modal-pwd-error" class="text-xs font-bold text-rose-600 hidden">Password salah! Silakan coba lagi.</div>
+
+    <div class="flex gap-2 pt-2">
+      <button onclick="closePasswordModal()" class="w-1/2 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-stone-600 hover:bg-stone-100">Batal</button>
+      <button onclick="verifyPasswordAction()" class="w-1/2 py-2.5 rounded-xl bg-orange-800 hover:bg-orange-700 text-white text-xs font-bold shadow">Konfirmasi</button>
+    </div>
+  </div>
+</div>
+
 <footer class="border-t bg-white text-center text-xs text-stone-500 p-5 no-print">
   MPI Antropologi Kelas XII Semester 1 · Kurikulum Merdeka · BSKAP 046/H/KR/2025
 </footer>
 
 <script>
-// URL Web App Google Apps Script Aktif
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyv2p-xdVMjp46WPCPI1ywNONeR57DsQ2JEfaJ0gzwsBD-EZsBBULGG2vdJSGsYXoj3pg/exec";
 
 const chapters=[
@@ -271,7 +325,7 @@ const chapters=[
 
 let currentChapter=1,currentTab='pengantar',currentRole='siswa';
 let shuffledQuestions=[],currentQuestionIndex=0,userAnswers={},quizStartTime=null,isCatGridOpen=true;
-let globalSheetData=[];
+let globalSheetData=[],pendingModalTarget=null;
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -437,7 +491,6 @@ function calculateDuration(start,end){
   return `${m} Menit ${s} Detik`;
 }
 
-// KIRIM DATA SISWA LANGSUNG KE GOOGLE SHEETS
 function sendToGoogleSheets(rec){
   return fetch(SCRIPT_URL, {
     method: "POST",
@@ -448,9 +501,11 @@ function sendToGoogleSheets(rec){
 }
 
 function submitStudentQuiz(){
-  const nama=$('quiz-nama').value.trim(),kelas=$('quiz-kelas').value.trim();
-  if(!nama||!kelas){
-    alert('Harap isi Nama Lengkap dan Kelas terlebih dahulu.');
+  const nama=$('quiz-nama').value.trim();
+  const kelas=$('quiz-kelas').value.trim() || 'XII';
+
+  if(!nama){
+    alert('Harap pilih Nama Siswa terlebih dahulu pada menu dropdown.');
     $('quiz-nama').focus();
     return;
   }
@@ -562,7 +617,7 @@ function submitStudentQuiz(){
         <i class="fa-solid fa-file-pdf"></i> Unduh / Cetak Hasil (PDF)
       </button>
 
-      <button onclick="bukaKunciDenganPassword()" class="px-4 py-2.5 rounded-xl bg-amber-100 text-amber-900 hover:bg-amber-200 text-xs font-bold border border-amber-300 flex items-center gap-2">
+      <button onclick="openPasswordModal('keys')" class="px-4 py-2.5 rounded-xl bg-amber-100 text-amber-900 hover:bg-amber-200 text-xs font-bold border border-amber-300 flex items-center gap-2">
         <i class="fa-solid fa-key"></i> Buka Kunci Jawaban & Pembahasan
       </button>
 
@@ -604,16 +659,70 @@ function ulangiEvaluasi(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function bukaKunciDenganPassword(){
-  const pwd=prompt('Masukkan Password Guru untuk membuka Kunci & Pembahasan:');
-  if(pwd===null) return;
-  if(pwd.trim().toLowerCase()==='libaru'){
-    $('student-keys-unlocked').classList.remove('hidden');
-    $('student-keys-unlocked').scrollIntoView({behavior:'smooth'});
-  }else{
-    alert('Password salah! Kunci jawaban dan pembahasan tetap terkunci.');
+// LOGIKA MODAL PASSWORD DENGAN FITUR SHOW / HIDE PASSWORD
+function openPasswordModal(target){
+  pendingModalTarget = target;
+  $('modal-password-input').value = '';
+  $('modal-password-input').type = 'password';
+  $('pwd-eye-icon').className = 'fa-solid fa-eye';
+  $('modal-pwd-error').classList.add('hidden');
+  
+  if(target === 'teacher'){
+    $('modal-pwd-title').textContent = 'Login Dashboard Guru';
+    $('modal-pwd-desc').textContent = 'Masukkan kata sandi guru untuk mengakses rekap evaluasi siswa.';
+  } else {
+    $('modal-pwd-title').textContent = 'Buka Kunci & Pembahasan';
+    $('modal-pwd-desc').textContent = 'Masukkan kata sandi otorisasi guru untuk melihat pembahasan soal.';
+  }
+
+  $('password-modal').classList.remove('hidden');
+  setTimeout(()=> $('modal-password-input').focus(), 100);
+}
+
+function closePasswordModal(){
+  $('password-modal').classList.add('hidden');
+  pendingModalTarget = null;
+}
+
+function togglePasswordVisibility(){
+  const inp = $('modal-password-input');
+  const icon = $('pwd-eye-icon');
+  if(inp.type === 'password'){
+    inp.type = 'text';
+    icon.className = 'fa-solid fa-eye-slash text-orange-800';
+  } else {
+    inp.type = 'password';
+    icon.className = 'fa-solid fa-eye text-stone-400';
   }
 }
+
+function verifyPasswordAction(){
+  const pwd = $('modal-password-input').value.trim();
+  if(pwd.toLowerCase() === 'libaru'){
+    closePasswordModal();
+    if(pendingModalTarget === 'teacher'){
+      currentRole='guru';
+      $('student-section').classList.add('hidden');
+      $('teacher-section').classList.remove('hidden');
+      $('role-badge').textContent='Dashboard Guru';
+      $('teacher-mode').className='px-3 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold';
+      $('student-mode').className='px-3 py-2 rounded-xl bg-stone-100 text-stone-700 text-xs font-bold';
+      fetchGoogleSheetsData();
+      renderTeacherKeys();
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else if(pendingModalTarget === 'keys'){
+      $('student-keys-unlocked').classList.remove('hidden');
+      $('student-keys-unlocked').scrollIntoView({behavior:'smooth'});
+    }
+  } else {
+    $('modal-pwd-error').classList.remove('hidden');
+    $('modal-password-input').focus();
+  }
+}
+
+$('modal-password-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') verifyPasswordAction();
+});
 
 // Mode Guru
 function activateStudentMode(){
@@ -625,25 +734,6 @@ function activateStudentMode(){
   $('teacher-mode').className='px-3 py-2 rounded-xl bg-stone-100 text-stone-700 text-xs font-bold';
 }
 
-function promptTeacherAuth(){
-  const p=prompt('Masukkan kata sandi guru:');
-  if(p===null)return;
-  if(p.trim().toLowerCase()!=='libaru'){
-    alert('Kata sandi salah.');
-    return;
-  }
-  currentRole='guru';
-  $('student-section').classList.add('hidden');
-  $('teacher-section').classList.remove('hidden');
-  $('role-badge').textContent='Dashboard Guru';
-  $('teacher-mode').className='px-3 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold';
-  $('student-mode').className='px-3 py-2 rounded-xl bg-stone-100 text-stone-700 text-xs font-bold';
-  fetchGoogleSheetsData();
-  renderTeacherKeys();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-// MENGAMBIL DATA DARI GOOGLE SHEETS
 function fetchGoogleSheetsData(){
   $('rekap-table-body').innerHTML = `<tr><td colspan="9" class="p-5 text-center text-stone-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Mengambil data terbaru dari Google Sheets...</td></tr>`;
 
@@ -690,7 +780,6 @@ function renderTeacherTable(data){
     </tr>`).join('');
 }
 
-// HAPUS BARIS DI GOOGLE SHEETS
 function deleteRowGoogleSheets(id, nama){
   if(!confirm(`Hapus data evaluasi siswa an. "${nama}" dari Google Sheets?`)) return;
   fetch(SCRIPT_URL, {
@@ -737,7 +826,7 @@ function exportRekapToCSV(){
 }
 
 function downloadReflectionTxt(){
-  const c=chapter(),nama=$('ref-nama').value.trim()||'Siswa',txt=`JURNAL REFLEKSI ANTROPOLOGI KELAS XII\nBab ${c.id}: ${c.title}\nNama: ${nama}\nKelas: ${$('ref-kelas').value}\nWaktu: ${new Date().toLocaleString('id-ID')}\n\n1. Tiga hal yang saya pahami:\n${$('ref-3').value}\n\n2. Dua hal yang ingin saya pelajari:\n${$('ref-2').value}\n\n3. Satu fenomena budaya di sekitar saya:\n${$('ref-1').value}\n`;
+  const c=chapter(),nama=$('ref-nama').value.trim()||'Siswa',txt=`JURNAL REFLEKSI ANTROPOLOGI KELAS XII\nBab ${c.id}: ${c.title}\nNama: ${nama}\nKelas: XII\nWaktu: ${new Date().toLocaleString('id-ID')}\n\n1. Tiga hal yang saya pahami:\n${$('ref-3').value}\n\n2. Dua hal yang ingin saya pelajari:\n${$('ref-2').value}\n\n3. Satu fenomena budaya di sekitar saya:\n${$('ref-1').value}\n`;
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=`Refleksi_Antropologi_Bab${c.id}.txt`;a.click();URL.revokeObjectURL(url);
 }
