@@ -8,13 +8,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
 .choice{width:100%;text-align:left;border:1px solid #e7e5e4;border-radius:.85rem;padding:.95rem;background:#fff;font-size:.9rem;line-height:1.55;transition:all .15s ease}
 .choice:hover{border-color:#c2410c;background:#fff7ed}
 .choice.selected{border:2px solid #c2410c;background:#ffedd5;font-weight:600}
-
-/* Gaya Nomor Kisi-kisi CAT */
 .cat-btn{width:2.35rem;height:2.35rem;display:inline-flex;align-items:center;justify-content:center;border-radius:.6rem;font-size:.75rem;font-weight:800;transition:all .15s ease;border:1.5px solid #d6d3d1}
 .cat-btn.answered{background:#059669;color:white;border-color:#047857}
 .cat-btn.unanswered{background:#f5f5f4;color:#78716c}
 .cat-btn.current{ring:2.5px solid #c2410c;ring-offset:1.5px;font-weight:900}
-
 @media print{
   header, nav, #chapter-nav, .no-print{display:none!important}
   body{background:white!important;color:black!important}
@@ -23,22 +20,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
 }
 </style></head>
 <body class="min-h-screen flex flex-col">
-
-<!-- Formulir Netlify Forms Khusus Rekap Excel Otomatis -->
-<form name="rekap-antropologi-kelas12" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input type="hidden" name="form-name" value="rekap-antropologi-kelas12">
-  <input name="bot-field">
-  <input type="text" name="Waktu_Selesai">
-  <input type="text" name="Nama_Lengkap">
-  <input type="text" name="Kelas_Rombel">
-  <input type="text" name="Bab_Materi">
-  <input type="text" name="Nilai_Akhir">
-  <input type="text" name="Status_Kelulusan">
-  <input type="text" name="Jumlah_Benar">
-  <input type="text" name="Jumlah_Salah">
-  <input type="text" name="Durasi_Pengerjaan">
-  <textarea name="Rincian_Jawaban"></textarea>
-</form>
 
 <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-stone-200 no-print">
   <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
@@ -114,13 +95,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
 
   <!-- TAB KUIS EVALUASI (TAMPILAN CAT) -->
   <div id="tab-kuis" class="hidden space-y-5">
-    <!-- Panel Identitas & Ringkasan -->
     <div class="panel p-5 no-print">
       <div class="flex flex-wrap justify-between gap-3 items-center">
         <div>
           <div class="text-xs uppercase tracking-widest font-extrabold text-orange-800">Evaluasi Formatif Mandiri (KKM: 75)</div>
           <h2 class="display text-2xl font-bold">Evaluasi Kasus · Sistem CAT</h2>
-          <p class="text-xs text-stone-500 mt-1">Pilih salah satu jawaban untuk otomatis lanjut ke soal berikutnya.</p>
+          <p class="text-xs text-stone-500 mt-1">Pilih jawaban untuk otomatis lanjut. Jawaban dan nilai otomatis tersimpan ke server Google Sheets guru.</p>
         </div>
         <div class="text-right">
           <div id="quiz-progress-text" class="text-sm font-extrabold text-orange-900">Soal 1 dari 25</div>
@@ -135,13 +115,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
       </div>
     </div>
 
-    <!-- Container Kartu Soal Tunggal -->
+    <!-- Container Kartu Soal CAT -->
     <div id="single-quiz-card" class="panel p-6 space-y-5 no-print relative">
       <div class="flex flex-wrap items-center justify-between gap-3 border-b pb-4">
         <div>
           <span id="card-q-number" class="text-xs font-black uppercase tracking-wider text-orange-800 bg-orange-100 px-3 py-1.5 rounded-lg">KASUS 1 DARI 25</span>
         </div>
-
         <div class="flex items-center gap-2">
           <div id="card-q-status-badge" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-stone-100 text-stone-600 border border-stone-200 flex items-center gap-1.5">
             <i class="fa-solid fa-clock"></i> Belum Dijawab
@@ -152,7 +131,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
         </div>
       </div>
 
-      <!-- KISI-KISI NOMOR SOAL TIPE CAT -->
+      <!-- Kisi-kisi CAT -->
       <div id="cat-grid-box" class="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
         <div class="flex items-center justify-between text-xs font-bold text-stone-600 border-b pb-2">
           <span><i class="fa-solid fa-table-cells mr-1"></i> Lembar Kisi-Kisi Nomor Soal (CAT):</span>
@@ -166,7 +145,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
       </div>
 
       <p id="card-q-text" class="text-base sm:text-lg font-semibold text-stone-800 leading-relaxed pt-1"></p>
-      
       <div id="card-q-options" class="grid gap-2.5 pt-1"></div>
 
       <div class="flex justify-between items-center pt-4 border-t">
@@ -180,18 +158,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
       </div>
     </div>
 
-    <!-- Tombol Kumpulkan Jawaban -->
+    <!-- Tombol Kumpulkan -->
     <div id="submit-box" class="panel p-5 flex flex-wrap items-center justify-between gap-3 no-print">
       <div>
         <div class="text-xs font-bold text-stone-700">Sudah selesai menjawab seluruh soal?</div>
-        <p class="text-xs text-stone-500">Nilai akan otomatis terhitung dan tersimpan ke server database Netlify.</p>
+        <p class="text-xs text-stone-500">Nilai akan otomatis tersimpan langsung ke Google Spreadsheet Guru.</p>
       </div>
-      <button onclick="submitStudentQuiz()" class="px-6 py-3 bg-orange-800 hover:bg-orange-700 text-white rounded-xl font-bold text-sm shadow-md transition-all">
+      <button onclick="submitStudentQuiz()" id="btn-submit-quiz" class="px-6 py-3 bg-orange-800 hover:bg-orange-700 text-white rounded-xl font-bold text-sm shadow-md transition-all">
         <i class="fa-solid fa-paper-plane mr-2"></i> Kumpulkan Jawaban
       </button>
     </div>
 
-    <!-- HASIL EVALUASI SISWA & FITUR DOWNLOAD / EMAIL -->
+    <!-- Hasil Evaluasi -->
     <div id="quiz-result" class="hidden panel p-6 space-y-5 print-area"></div>
   </div>
 
@@ -209,36 +187,42 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
     <div class="panel p-6 space-y-4">
       <div><div class="text-xs uppercase tracking-widest font-extrabold text-orange-800">Refleksi Pembelajaran</div><h2 class="display text-2xl font-bold">Apa yang Saya Pelajari?</h2></div>
       <div class="grid sm:grid-cols-2 gap-3"><input id="ref-nama" class="border rounded-xl p-3 text-sm" placeholder="Nama siswa"><input id="ref-kelas" class="border rounded-xl p-3 text-sm" placeholder="Kelas"></div>
-      <label class="block text-sm font-bold">1. Tiga hal penting yang saya pahami</label><textarea id="ref-3" rows="3" class="w-full border rounded-xl p-3 text-sm" placeholder="Tuliskan tiga hal yang kamu pahami..."></textarea>
+      <label class="block text-sm font-bold">1. Tiga hal penting yang saya pahami</label><textarea id="ref-3" rows="3" class="w-full border rounded-xl p-3 text-sm" placeholder="Tuliskan tiga hal..."></textarea>
       <label class="block text-sm font-bold">2. Dua hal yang masih ingin saya pelajari</label><textarea id="ref-2" rows="2" class="w-full border rounded-xl p-3 text-sm" placeholder="Tuliskan dua hal..."></textarea>
-      <label class="block text-sm font-bold">3. Satu contoh fenomena budaya di sekitar saya</label><textarea id="ref-1" rows="2" class="w-full border rounded-xl p-3 text-sm" placeholder="Ceritakan contoh dan alasanmu..."></textarea>
+      <label class="block text-sm font-bold">3. Satu contoh fenomena budaya di sekitar saya</label><textarea id="ref-1" rows="2" class="w-full border rounded-xl p-3 text-sm" placeholder="Ceritakan contoh..."></textarea>
       <button onclick="downloadReflectionTxt()" class="px-4 py-2.5 bg-stone-900 text-white rounded-xl text-sm font-bold">Unduh Refleksi (.txt)</button>
     </div>
   </div>
 </section>
 
-<!-- TEACHER SECTION -->
+<!-- TEACHER SECTION (DATA DIAMBIL DARI GOOGLE SHEETS) -->
 <section id="teacher-section" class="hidden space-y-5">
   <div class="panel p-6">
     <div class="flex flex-wrap justify-between gap-3 items-center">
       <div>
         <div class="text-xs uppercase tracking-widest font-extrabold text-emerald-800">Area Pendidik</div>
-        <h2 class="display text-2xl font-bold">Dashboard Rekap Evaluasi</h2>
-        <p class="text-xs text-stone-500">Data tersimpan di perangkat lokal & Netlify Forms.</p>
+        <h2 class="display text-2xl font-bold">Dashboard Rekap Evaluasi (Google Sheets)</h2>
+        <p class="text-xs text-stone-500">Data bersumber dari database cloud Google Spreadsheet.</p>
       </div>
       <div class="flex gap-2">
-        <button onclick="exportRekapToCSV()" class="px-3 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold"><i class="fa-solid fa-file-excel mr-1"></i> Ekspor CSV</button>
-        <button onclick="activateStudentMode()" class="px-3 py-2 bg-stone-100 rounded-xl text-xs font-bold">Kembali ke Siswa</button>
+        <button onclick="fetchGoogleSheetsData()" class="px-3 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold hover:bg-emerald-600">
+          <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Data
+        </button>
+        <button onclick="exportRekapToCSV()" class="px-3 py-2 bg-stone-800 text-white rounded-xl text-xs font-bold hover:bg-stone-700">
+          <i class="fa-solid fa-file-excel mr-1"></i> Ekspor CSV
+        </button>
+        <button onclick="activateStudentMode()" class="px-3 py-2 bg-stone-100 rounded-xl text-xs font-bold hover:bg-stone-200">Kembali ke Siswa</button>
       </div>
     </div>
+    
     <div class="grid sm:grid-cols-3 gap-3 mt-5">
-      <div class="bg-stone-50 rounded-xl p-4"><div class="text-xs text-stone-500">Jumlah pengerjaan</div><div id="stat-count" class="text-2xl font-extrabold">0</div></div>
+      <div class="bg-stone-50 rounded-xl p-4"><div class="text-xs text-stone-500">Jumlah pengerjaan siswa</div><div id="stat-count" class="text-2xl font-extrabold">0</div></div>
       <div class="bg-stone-50 rounded-xl p-4"><div class="text-xs text-stone-500">Rata-rata nilai</div><div id="stat-average" class="text-2xl font-extrabold">0</div></div>
       <div class="bg-stone-50 rounded-xl p-4"><div class="text-xs text-stone-500">Bab yang dikerjakan</div><div id="stat-chapters" class="text-2xl font-extrabold">0</div></div>
     </div>
+
     <input id="teacher-search-input" oninput="filterRekapTable()" class="mt-4 w-full border rounded-xl p-3 text-sm" placeholder="Cari nama, kelas, atau bab...">
     
-    <!-- TABEL DENGAN MENU HAPUS & DETAIL -->
     <div class="overflow-x-auto mt-3">
       <table class="w-full text-left text-xs">
         <thead class="bg-stone-100">
@@ -254,10 +238,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
             <th class="p-3 text-center">Aksi</th>
           </tr>
         </thead>
-        <tbody id="rekap-table-body"></tbody>
+        <tbody id="rekap-table-body">
+          <tr><td colspan="9" class="p-5 text-center text-stone-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data dari Google Sheets...</td></tr>
+        </tbody>
       </table>
     </div>
-    <button onclick="clearAllRekapData()" class="mt-4 text-xs font-bold text-rose-700 hover:underline">Hapus seluruh rekap lokal</button>
   </div>
 
   <div class="panel p-6">
@@ -273,7 +258,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
 </footer>
 
 <script>
-// Data Bab & Soal Kasus per Bab
+// URL Web App Google Apps Script Aktif
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyv2p-xdVMjp46WPCPI1ywNONeR57DsQ2JEfaJ0gzwsBD-EZsBBULGG2vdJSGsYXoj3pg/exec";
+
 const chapters=[
 {"id": 1, "title": "Konsep Dasar Antropologi dan Penelitian Etnografi", "subtitle": "Memahami manusia dan kebudayaan secara holistik", "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=85", "intro": "Antropologi mempelajari manusia dan kehidupan budayanya dalam berbagai dimensi.", "goals": ["Menjelaskan pengertian, perkembangan, ruang lingkup, dan prinsip dasar Antropologi.", "Membedakan pendekatan emik dan etik serta menerapkan relativisme budaya.", "Menjelaskan pendekatan holistik dan deskripsi tebal (thick description).", "Merancang pengamatan etnografi sederhana dengan memperhatikan etika penelitian."], "sections": [["1. Pengertian dan ruang lingkup Antropologi", "Antropologi adalah ilmu yang mengkaji manusia, kehidupannya, dan kebudayaan dalam konteks ruang serta waktu."], ["2. Prinsip humanistik dan holistik", "Prinsip humanistik menempatkan manusia sebagai subjek yang memiliki martabat, pengalaman, dan pengetahuan."], ["3. Pendekatan emik dan etik", "Pendekatan emik berusaha memahami pengalaman dari sudut pandang pelaku budaya."], ["4. Relativisme budaya dan etnosentrisme", "Relativisme budaya adalah upaya memahami praktik budaya berdasarkan konteks nilainya sendiri."], ["5. Etnografi dan thick description", "Etnografi adalah pendekatan penelitian melalui pengamatan langsung dan keterlibatan mendalam."]], "concepts": [["Pendekatan emik", "A"], ["Pendekatan etik", "B"], ["Relativisme budaya", "C"], ["Pendekatan holistik", "D"], ["Thick description", "A"]], "questions": [{"q": "Di sebuah kampung pesisir, peneliti mengikuti kegiatan persiapan melaut dan berbincang dengan nelayan tentang aturan pembagian hasil tangkapan. Dalam menganalisis situasi tersebut, konsep yang paling tepat untuk menjelaskan aspek sudut pandang dan makna adalah ...", "options": ["Memahami makna tindakan dari sudut pandang pelaku budaya.", "Mengukur perilaku dengan standar peneliti", "Membandingkan jumlah penduduk", "Menyusun urutan waktu sejarah"], "ans": 0, "exp": "Pendekatan emik: Memahami makna tindakan dari sudut pandang pelaku budaya (native's point of view)."}, {"q": "Di sebuah kampung pesisir, peneliti mengikuti kegiatan persiapan melaut dan berbincang dengan nelayan tentang aturan pembagian hasil tangkapan. Dalam menganalisis situasi tersebut, konsep yang paling tepat untuk menjelaskan aspek pola dan proses budaya adalah ...", "options": ["Mengikuti semua pendapat narasumber tanpa analisis", "Menganalisis gejala menggunakan kategori atau sudut pandang ilmiah peneliti.", "Menghindari seluruh teori", "Menganggap satu budaya paling benar"], "ans": 1, "exp": "Pendekatan etik: Menganalisis gejala menggunakan kategori ilmiah peneliti."}, {"q": "Di sebuah kampung pesisir, peneliti mengikuti kegiatan persiapan melaut dan berbincang dengan nelayan tentang aturan pembagian hasil tangkapan. Dalam menganalisis situasi tersebut, konsep yang paling tepat untuk menjelaskan aspek hubungan sosial dan aturan adalah ...", "options": ["Menganggap semua kebiasaan harus sama", "Menilai budaya lain dengan ukuran sendiri", "Memahami praktik budaya berdasarkan konteks dan makna masyarakat yang menjalankannya.", "Menolak mempelajari budaya berbeda"], "ans": 2, "exp": "Relativisme budaya: Memahami praktik budaya berdasarkan konteks nilainya sendiri."}, {"q": "Di sebuah kampung pesisir, peneliti mengikuti kegiatan persiapan melaut dan berbincang dengan nelayan tentang aturan pembagian hasil tangkapan. Dalam menganalisis situasi tersebut, konsep yang paling tepat untuk menjelaskan aspek simbol dan kepercayaan adalah ...", "options": ["Mengkaji satu tindakan tanpa konteks", "Membatasi kajian pada benda", "Mengabaikan hubungan sosial", "Memahami gejala dengan melihat hubungan berbagai unsur kehidupan."], "ans": 3, "exp": "Pendekatan holistik: Memandang unsur-unsur kehidupan saling berhubungan."}, {"q": "Di sebuah kampung pesisir, peneliti mengikuti kegiatan persiapan melaut dan berbincang dengan nelayan tentang aturan pembagian hasil tangkapan. Dalam menganalisis situasi tersebut, konsep yang paling tepat untuk menjelaskan aspek keberagaman dan interaksi adalah ...", "options": ["Deskripsi mendalam yang menjelaskan tindakan beserta konteks dan maknanya.", "Catatan singkat tanpa konteks", "Daftar angka tanpa penjelasan", "Pendapat pribadi peneliti saja"], "ans": 0, "exp": "Thick description: Menguraikan tindakan beserta konteks makna secara mendalam."}, {"q": "Seorang murid membandingkan tradisi makan bersama di dua daerah tanpa menyebut salah satunya lebih maju atau lebih rendah. Dalam kasus sudut pandang makna adalah ...", "options": ["Mengukur perilaku dengan standar peneliti", "Memahami makna tindakan dari sudut pandang pelaku budaya.", "Membandingkan jumlah penduduk", "Menyusun urutan waktu sejarah"], "ans": 1, "exp": "Pendekatan emik: Menghargai pemaknaan internal pelaku budaya."}, {"q": "Seorang murid membandingkan tradisi makan bersama di dua daerah tanpa menyebut salah satunya lebih maju atau lebih rendah. Dalam kasus kategori analisis ilmiah adalah ...", "options": ["Mengikuti semua pendapat narasumber tanpa analisis", "Menghindari seluruh teori", "Menganalisis gejala menggunakan kategori atau sudut pandang ilmiah peneliti.", "Menganggap satu budaya paling benar"], "ans": 2, "exp": "Pendekatan etik: Menganalisis secara objektif menggunakan konsep ilmiah."}, {"q": "Seorang murid membandingkan tradisi makan bersama di dua daerah tanpa menyebut salah satunya lebih maju atau lebih rendah. Dalam hal pemahaman konteks nilai adalah ...", "options": ["Menganggap semua kebiasaan harus sama", "Menilai budaya lain dengan ukuran sendiri", "Menolak mempelajari budaya berbeda", "Memahami praktik budaya berdasarkan konteks dan makna masyarakat yang menjalankannya."], "ans": 3, "exp": "Relativisme budaya: Tidak menilai rendah tradisi budaya lain."}, {"q": "Seorang murid membandingkan tradisi makan bersama di dua daerah tanpa menyebut salah satunya lebih maju atau lebih rendah. Konsep keterkaitan unsur adalah ...", "options": ["Memahami gejala dengan melihat hubungan berbagai unsur kehidupan.", "Mengkaji satu tindakan tanpa konteks", "Membatasi kajian pada benda", "Mengabaikan hubungan sosial"], "ans": 0, "exp": "Pendekatan holistik: Memahami makanan dalam konteks relasi sosial dan lingkungan."}, {"q": "Seorang murid membandingkan tradisi makan bersama di dua daerah tanpa menyebut salah satunya lebih maju atau lebih rendah. Uraian mendalam makna tradisi adalah ...", "options": ["Catatan singkat tanpa konteks", "Deskripsi mendalam yang menjelaskan tindakan beserta konteks dan maknanya.", "Daftar angka tanpa penjelasan", "Pendapat pribadi peneliti saja"], "ans": 1, "exp": "Thick description: Menjelaskan makna makan bersama secara mendalam."}, {"q": "Peneliti mencatat bahwa warga menaruh sesaji di tempat tertentu, lalu menanyakan arti tindakan itu kepada warga yang menjalankannya. Konsep sudut pandang pelaku adalah ...", "options": ["Mengukur perilaku dengan standar peneliti", "Membandingkan jumlah penduduk", "Memahami makna tindakan dari sudut pandang pelaku budaya.", "Menyusun urutan waktu sejarah"], "ans": 2, "exp": "Pendekatan emik: Menanyakan arti langsung kepada pelaku budaya."}, {"q": "Peneliti mencatat bahwa warga menaruh sesaji di tempat tertentu, lalu menanyakan arti tindakan itu kepada warga yang menjalankannya. Sudut pandang peneliti adalah ...", "options": ["Mengikuti semua pendapat narasumber tanpa analisis", "Menghindari seluruh teori", "Menganggap satu budaya paling benar", "Menganalisis gejala menggunakan kategori atau sudut pandang ilmiah peneliti."], "ans": 3, "exp": "Pendekatan etik: Menjelaskan fungsi sesaji dengan konsep sistem kepercayaan."}, {"q": "Peneliti mencatat bahwa warga menaruh sesaji di tempat tertentu, lalu menanyakan arti tindakan itu kepada warga. Menilai tanpa prasangka adalah ...", "options": ["Memahami praktik budaya berdasarkan konteks dan makna masyarakat yang menjalankannya.", "Menganggap semua kebiasaan harus sama", "Menilai budaya lain dengan ukuran sendiri", "Menolak mempelajari budaya berbeda"], "ans": 0, "exp": "Relativisme budaya: Menghargai keyakinan lokal sesuai konteksnya."}, {"q": "Peneliti mencatat hubungan sesaji dengan pelestarian hutan di desa tersebut. Konsep keterkaitan ini adalah ...", "options": ["Mengkaji satu tindakan tanpa konteks", "Memahami gejala dengan melihat hubungan berbagai unsur kehidupan.", "Membatasi kajian pada benda", "Mengabaikan hubungan sosial"], "ans": 1, "exp": "Pendekatan holistik: Menghubungkan kepercayaan dengan ekologi desa."}, {"q": "Peneliti menguraikan makna simbolik sesaji secara rinci dan mendalam. Konsep ini adalah ...", "options": ["Catatan singkat tanpa konteks", "Daftar angka tanpa penjelasan", "Deskripsi mendalam yang menjelaskan tindakan beserta konteks dan maknanya.", "Pendapat pribadi peneliti saja"], "ans": 2, "exp": "Thick description: Pengamatan mendalam hingga lapisan maknanya."}, {"q": "Dalam observasi pasar, murid mencatat sapaan, kepercayaan, dan hubungan langganan antar pedagang. Sudut pandang pedagang adalah ...", "options": ["Mengukur perilaku dengan standar peneliti", "Membandingkan jumlah penduduk", "Menyusun urutan waktu sejarah", "Memahami makna tindakan dari sudut pandang pelaku budaya."], "ans": 3, "exp": "Pendekatan emik: Mengetahui arti sapaan menurut kebiasaan pedagang."}, {"q": "Murid menganalisis transaksi pasar menggunakan teori pertukaran sosial. Konsep ini adalah ...", "options": ["Menganalisis gejala menggunakan kategori atau sudut pandang ilmiah peneliti.", "Mengikuti semua pendapat narasumber tanpa analisis", "Menghindari seluruh teori", "Menganggap satu budaya paling benar"], "ans": 0, "exp": "Pendekatan etik: Menggunakan teori keilmuan akademis."}, {"q": "Murid tidak meremehkan cara tawar menawar khas pasar tradisional. Sikap ini mencerminkan ...", "options": ["Menganggap semua kebiasaan harus sama", "Memahami praktik budaya berdasarkan konteks dan makna masyarakat yang menjalankannya.", "Menilai budaya lain dengan ukuran sendiri", "Menolak mempelajari budaya berbeda"], "ans": 1, "exp": "Relativisme budaya: Mengapresiasi kebiasaan transaksi lokal."}, {"q": "Murid melihat transaksi pasar terkait erat dengan kekerabatan dan moralitas. Konsep ini adalah ...", "options": ["Mengkaji satu tindakan tanpa konteks", "Membatasi kajian pada benda", "Memahami gejala dengan melihat hubungan berbagai unsur kehidupan.", "Mengabaikan hubungan sosial"], "ans": 2, "exp": "Pendekatan holistik: Pasar tidak hanya soal ekonomi, tetapi juga sosial."}, {"q": "Catatan lapangan murid menyajikan dialog utuh dan suasana emosional pasar. Konsep ini adalah ...", "options": ["Catatan singkat tanpa konteks", "Daftar angka tanpa penjelasan", "Pendapat pribadi peneliti saja", "Deskripsi mendalam yang menjelaskan tindakan beserta konteks dan maknanya."], "ans": 3, "exp": "Thick description: Etnografi yang kaya akan detail kontekstual."}, {"q": "Sebelum wawancara, murid meminta izin (informed consent) dan menjaga privasi narasumber. Ini mencerminkan ...", "options": ["Etika penelitian etnografi dan menghormati hak subjek penelitian.", "Kewajiban membayar narasumber", "Formalitas tanpa tujuan", "Menghindari wawancara langsung"], "ans": 0, "exp": "Etika penelitian: Prinsip humanistik dan persetujuan sukarela narasumber."}, {"q": "Meneliti perbedaan suku bangsa tanpa menempatkan satu suku lebih unggul daripada suku lainnya adalah wujud dari ...", "options": ["Etnosentrisme sempit", "Relativisme budaya dan penghormatan kemanusiaan.", "Asimilasi paksa", "Stereotip kelompok"], "ans": 1, "exp": "Relativisme budaya: Menghindari etnosentrisme dalam studi antropologi."}, {"q": "Teknik utama pengumpulan data dalam penelitian etnografi lapangan adalah ...", "options": ["Penyebaran kuesioner acak secara online", "Studi dokumen statistik saja", "Pengamatan terlibat (participant observation) dan wawancara mendalam.", "Eksperimen laboratorium tertutup"], "ans": 2, "exp": "Metode etnografi: Keterlibatan langsung peneliti di tengah masyarakat."}, {"q": "Pandangan yang menempatkan budaya sendiri sebagai tolok ukur kebenaran tertinggi disebut ...", "options": ["Etnosentrisme", "Holistik", "Emik", "Difusi"], "ans": 0, "exp": "Etnosentrisme: Menilai budaya lain dengan kacamata budaya sendiri."}, {"q": "Menghubungkan pola pertanian warga dengan sistem kepercayaan kalender pranata mangsa merupakan bukti antropologi berciri ...", "options": ["Parsial", "Holistik", "Etnosentris", "Monoton"], "ans": 1, "exp": "Holistik: Keterpaduan antara lingkungan, religi, dan mata pencaharian."}]},
 {"id": 2, "title": "Kebudayaan, Unsur, dan Perubahan Budaya", "subtitle": "Mengenali pola hidup, pengetahuan, dan kreativitas manusia", "image": "https://images.unsplash.com/photo-1590736969955-71cc94901144?auto=format&fit=crop&w=1600&q=85", "intro": "Kebudayaan merupakan keseluruhan ide, tindakan, dan karya manusia yang diperoleh melalui proses belajar.", "goals": ["Menjelaskan karakteristik dan 7 unsur kebudayaan.", "Menganalisis difusi, akulturasi, dan inovasi."], "sections": [["1. Pengertian Kebudayaan", "Kebudayaan dipelajari melalui sosialisasi, bukan genetik."], ["2. Wujud Kebudayaan", "Wujud gagasan, aktivitas berpola, dan artefak fisik."], ["3. Tujuh Unsur Universal", "Bahasa, sistem pengetahuan, organisasi sosial, teknologi, ekonomi, religi, kesenian."], ["4. Perubahan Budaya", "Inovasi, penemuan, kontak budaya, dan tantangan zaman."]], "concepts": [["Hasil belajar", "A"], ["Wujud gagasan", "B"], ["Unsur universal", "C"], ["Inovasi", "D"], ["Akulturasi", "A"]], "questions": Array.from({length:25},(_,k)=>({q:`Kasus evaluasi kebudayaan nomor ${k+1}: Bagaimana proses enkulturasi dan pewarisan nilai budaya berlangsung dalam kehidupan masyarakat sehari-hari?`,options:["Melalui proses belajar dan pembiasaan sosial secara berkesinambungan.","Diturunkan secara mutlak lewat kode genetika biologis","Terjadi secara spontan tanpa bantuan kelompok sosial","Hanya berlaku bagi masyarakat perkotaan maju"],ans:0,exp:"Kebudayaan diperoleh melalui enkulturasi (proses belajar sosial sepanjang hayat)."}))},
@@ -282,14 +269,9 @@ const chapters=[
 {"id": 5, "title": "Keberagaman Budaya, Masyarakat Multikultural, dan Dunia Digital", "subtitle": "Membangun pemahaman lintas budaya di tengah perubahan", "image": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1600&q=85", "intro": "Menghadapi era digital dengan pemahaman multikulturalisme, empati budaya, dan sikap anti-stereotip.", "goals": ["Menganalisis fenomena stereotip dan diskriminasi di media sosial.", "Menyusun rekomendasi literasi budaya digital."], "sections": [["1. Multikulturalisme", "Pengakuan kesetaraan dan keadilan dalam keberagaman."], ["2. Ruang Digital", "Peluang dokumentasi budaya dan tantangan misrepresentasi."]], "concepts": [["Multikultural", "A"], ["Stereotip", "B"], ["Diskriminasi", "C"], ["Literasi Digital", "D"], ["Rekomendasi", "A"]], "questions": Array.from({length:25},(_,k)=>({q:`Kasus evaluasi masyarakat digital nomor ${k+1}: Sikap bijak yang perlu dikembangkan peserta didik saat menemukan potongan video tradisi lokal di media sosial adalah ...`,options:["Mencari konteks lengkap dan memverifikasi sumber sebelum membuat penilaian.","Langsung menghakimi dengan ukuran budaya pribadi","Menyebarkan ulang tanpa mengetahui arti sebenarnya","Menganggap budaya yang viral sebagai hal aneh"],ans:0,exp:"Literasi budaya digital menuntut sikap kritis, verifikasi konteks, dan menghindari prasangka (stereotip)."})) }
 ];
 
-const STORAGE_KEY='DATABASE_REKAP_ANTROPOLOGI_KELAS12_NETLIFY';
 let currentChapter=1,currentTab='pengantar',currentRole='siswa';
-
-let shuffledQuestions=[];
-let currentQuestionIndex=0;
-let userAnswers={}; 
-let quizStartTime=null;
-let isCatGridOpen=true;
+let shuffledQuestions=[],currentQuestionIndex=0,userAnswers={},quizStartTime=null,isCatGridOpen=true;
+let globalSheetData=[];
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -309,7 +291,6 @@ function init(){
   $('chapter-select').innerHTML=opts;
   $('key-chapter').innerHTML=opts;
   renderChapter();
-  renderTeacherDashboard();
 }
 
 function changeChapter(id){
@@ -317,9 +298,7 @@ function changeChapter(id){
   initQuizState();
   $('quiz-result').classList.add('hidden');
   renderChapter();
-  if(currentTab==='kuis'){
-    renderCurrentQuestion();
-  }
+  if(currentTab==='kuis') renderCurrentQuestion();
 }
 
 function renderChapter(){
@@ -427,7 +406,6 @@ function renderCurrentQuestion(){
 function chooseAnswerAndAdvance(optIdx){
   userAnswers[currentQuestionIndex]=optIdx;
   renderCurrentQuestion();
-
   setTimeout(()=>{
     if(currentQuestionIndex<shuffledQuestions.length-1){
       currentQuestionIndex++;
@@ -459,35 +437,20 @@ function calculateDuration(start,end){
   return `${m} Menit ${s} Detik`;
 }
 
-function getRekapData(){
-  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return []}
-}
-
-function postToNetlify(r){
-  const f=new URLSearchParams();
-  f.append('form-name','rekap-antropologi-kelas12');
-  f.append('Waktu_Selesai',r.waktu);
-  f.append('Nama_Lengkap',r.nama);
-  f.append('Kelas_Rombel',r.kelas);
-  f.append('Bab_Materi',r.bab);
-  f.append('Nilai_Akhir',r.score);
-  f.append('Status_Kelulusan',r.status);
-  f.append('Jumlah_Benar',r.correct);
-  f.append('Jumlah_Salah',r.wrong);
-  f.append('Durasi_Pengerjaan',r.durasi);
-  f.append('Rincian_Jawaban',JSON.stringify(r.rincian));
-
-  return fetch('/',{
-    method:'POST',
-    headers:{'Content-Type':'application/x-www-form-urlencoded'},
-    body:f.toString()
+// KIRIM DATA SISWA LANGSUNG KE GOOGLE SHEETS
+function sendToGoogleSheets(rec){
+  return fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(rec)
   });
 }
 
 function submitStudentQuiz(){
   const nama=$('quiz-nama').value.trim(),kelas=$('quiz-kelas').value.trim();
   if(!nama||!kelas){
-    alert('Harap isi Nama Lengkap dan Kelas terlebih dahulu di bagian atas.');
+    alert('Harap isi Nama Lengkap dan Kelas terlebih dahulu.');
     $('quiz-nama').focus();
     return;
   }
@@ -495,7 +458,7 @@ function submitStudentQuiz(){
   const total=shuffledQuestions.length;
   const answeredCount=Object.keys(userAnswers).length;
   if(answeredCount<total){
-    if(!confirm(`Perhatian: Baru ${answeredCount} dari ${total} soal terjawab. Apakah Anda yakin ingin mengumpulkan sekarang?`)){
+    if(!confirm(`Perhatian: Baru ${answeredCount} dari ${total} soal terjawab. Yakin ingin mengumpulkan?`)){
       return;
     }
   }
@@ -527,23 +490,20 @@ function submitStudentQuiz(){
 
   const rec={
     id:Date.now(),
+    waktu:waktuString,
     nama,kelas,
     bab:`Bab ${c.id}: ${c.title}`,
-    chapterId:c.id,
+    durasi,
     correct:benar,
     wrong:salah,
     score:nilai,
-    status:statusLulus,
-    durasi:durasi,
-    waktu:waktuString,
-    rincian:details
+    status:statusLulus
   };
 
-  const db=getRekapData();
-  db.unshift(rec);
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
-
-  postToNetlify(rec);
+  $('btn-submit-quiz').disabled=true;
+  $('btn-submit-quiz').innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i> Menyimpan ke Google Sheets...';
+  
+  sendToGoogleSheets(rec);
 
   $('single-quiz-card').classList.add('hidden');
   $('submit-box').classList.add('hidden');
@@ -556,7 +516,6 @@ function submitStudentQuiz(){
       <p class="text-xs text-stone-500">Mata Pelajaran: Antropologi Kelas XII · Kurikulum Merdeka</p>
     </div>
 
-    <!-- TABEL DATA SISWA & HASIL (RAMAH CETAK PDF) -->
     <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 grid sm:grid-cols-2 gap-4 text-xs leading-relaxed">
       <div>
         <p><span class="text-stone-500 font-semibold">Nama Siswa:</span> <b class="text-stone-900">${esc(nama)}</b></p>
@@ -595,7 +554,7 @@ function submitStudentQuiz(){
 
     <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 font-bold flex items-center gap-2">
       <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-      <span>Data pengerjaan berhasil tersimpan di server Netlify dan masuk ke daftar rekap Excel guru.</span>
+      <span>Hasil evaluasi Anda telah tersimpan dan terkirim ke rekapitulasi Google Sheets Guru.</span>
     </div>
 
     <div class="flex flex-wrap gap-2 pt-2 border-t no-print">
@@ -632,7 +591,6 @@ function submitStudentQuiz(){
   `;
 
   $('quiz-result').scrollIntoView({behavior:'smooth'});
-  renderTeacherDashboard();
 }
 
 function ulangiEvaluasi(){
@@ -640,6 +598,8 @@ function ulangiEvaluasi(){
   $('quiz-result').classList.add('hidden');
   $('single-quiz-card').classList.remove('hidden');
   $('submit-box').classList.remove('hidden');
+  $('btn-submit-quiz').disabled=false;
+  $('btn-submit-quiz').innerHTML='<i class="fa-solid fa-paper-plane mr-2"></i> Kumpulkan Jawaban';
   renderCurrentQuestion();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -678,55 +638,70 @@ function promptTeacherAuth(){
   $('role-badge').textContent='Dashboard Guru';
   $('teacher-mode').className='px-3 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold';
   $('student-mode').className='px-3 py-2 rounded-xl bg-stone-100 text-stone-700 text-xs font-bold';
-  renderTeacherDashboard();
+  fetchGoogleSheetsData();
   renderTeacherKeys();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// RENDER TABEL DASHBOARD GURU LENGKAP DENGAN TOMBOL HAPUS PER DATA
-function renderTeacherDashboard(){
-  const d=getRekapData();
-  $('stat-count').textContent=d.length;
-  $('stat-average').textContent=d.length?Math.round(d.reduce((a,x)=>a+(+x.score||0),0)/d.length):0;
-  $('stat-chapters').textContent=new Set(d.map(x=>x.chapterId||x.bab)).size;
-  $('rekap-table-body').innerHTML=d.map(r=>`
+// MENGAMBIL DATA DARI GOOGLE SHEETS
+function fetchGoogleSheetsData(){
+  $('rekap-table-body').innerHTML = `<tr><td colspan="9" class="p-5 text-center text-stone-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Mengambil data terbaru dari Google Sheets...</td></tr>`;
+
+  fetch(SCRIPT_URL)
+    .then(res => res.json())
+    .then(data => {
+      globalSheetData = data;
+      renderTeacherTable(data);
+    })
+    .catch(err => {
+      $('rekap-table-body').innerHTML = `<tr><td colspan="9" class="p-5 text-center text-rose-600">Gagal memuat data dari Google Sheets. Pastikan Web App disetel ke "Anyone".</td></tr>`;
+    });
+}
+
+function renderTeacherTable(data){
+  $('stat-count').textContent = data.length;
+  $('stat-average').textContent = data.length ? Math.round(data.reduce((a,x)=>a+(+x.score||0),0)/data.length) : 0;
+  $('stat-chapters').textContent = new Set(data.map(x=>x.bab)).size;
+
+  if(!data.length){
+    $('rekap-table-body').innerHTML = `<tr><td colspan="9" class="p-5 text-center text-stone-500">Belum ada data pengerjaan di Google Sheets.</td></tr>`;
+    return;
+  }
+
+  $('rekap-table-body').innerHTML = data.map(r => `
     <tr class="border-b hover:bg-stone-50">
       <td class="p-3">${esc(r.waktu)}</td>
       <td class="p-3 font-bold">${esc(r.nama)}</td>
       <td class="p-3">${esc(r.kelas)}</td>
-      <td class="p-3">${esc(r.bab||'Bab')}</td>
-      <td class="p-3">${esc(r.durasi||'-')}</td>
-      <td class="p-3 font-semibold">${r.correct} / ${r.wrong}</td>
+      <td class="p-3">${esc(r.bab)}</td>
+      <td class="p-3">${esc(r.durasi)}</td>
+      <td class="p-3 font-semibold">${esc(r.benarSalah)}</td>
       <td class="p-3 font-extrabold">${r.score}</td>
       <td class="p-3">
         <span class="px-2 py-1 rounded text-[10px] font-bold ${r.score>=75?'bg-emerald-100 text-emerald-800':'bg-rose-100 text-rose-800'}">
-          ${esc(r.status||(r.score>=75?'LULUS':'REMEDIAL (KKM 75)'))}
+          ${esc(r.status)}
         </span>
       </td>
       <td class="p-3 text-center">
-        <div class="flex items-center justify-center gap-2">
-          <button onclick="viewDetailSiswa(${r.id})" class="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg font-bold text-[11px] border border-stone-200 flex items-center gap-1">
-            <i class="fa-solid fa-eye text-stone-500"></i> Detail
-          </button>
-          <button onclick="deleteSingleRekap(${r.id})" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg font-bold text-[11px] border border-rose-200 flex items-center gap-1">
-            <i class="fa-solid fa-trash-can text-rose-600"></i> Hapus
-          </button>
-        </div>
+        <button onclick="deleteRowGoogleSheets('${r.id}', '${esc(r.nama)}')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg font-bold text-[11px] border border-rose-200">
+          <i class="fa-solid fa-trash-can mr-1"></i> Hapus
+        </button>
       </td>
-    </tr>`).join('')||'<tr><td colspan="9" class="p-5 text-center text-stone-500">Belum ada rekap tersimpan.</td></tr>';
+    </tr>`).join('');
 }
 
-// FUNGSI HAPUS SATU DATA REKAP SISWA
-function deleteSingleRekap(id){
-  const d=getRekapData();
-  const target=d.find(x=>x.id===id);
-  if(!target) return;
-
-  if(confirm(`Apakah Anda yakin ingin menghapus hasil evaluasi siswa:\nNama: ${target.nama}\nKelas: ${target.kelas}\nNilai: ${target.score}?`)){
-    const updated=d.filter(x=>x.id!==id);
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(updated));
-    renderTeacherDashboard();
-  }
+// HAPUS BARIS DI GOOGLE SHEETS
+function deleteRowGoogleSheets(id, nama){
+  if(!confirm(`Hapus data evaluasi siswa an. "${nama}" dari Google Sheets?`)) return;
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "delete", id: id })
+  }).then(()=>{
+    globalSheetData = globalSheetData.filter(x => String(x.id) !== String(id));
+    renderTeacherTable(globalSheetData);
+  });
 }
 
 function renderTeacherKeys(){
@@ -742,37 +717,23 @@ function renderTeacherKeys(){
     </div>`).join('');
 }
 
-function viewDetailSiswa(id){
-  const r=getRekapData().find(x=>x.id===id);
-  if(!r) return;
-  alert(`Detail Rekap Evaluasi:\nNama: ${r.nama}\nKelas: ${r.kelas}\nBab: ${r.bab}\nNilai: ${r.score}\nStatus: ${r.status}\nDurasi: ${r.durasi}\nWaktu Selesai: ${r.waktu}`);
-}
-
 function filterRekapTable(){
   const q=$('teacher-search-input').value.toLowerCase();
   document.querySelectorAll('#rekap-table-body tr').forEach(tr=>tr.style.display=tr.innerText.toLowerCase().includes(q)?'':'none');
 }
 
 function exportRekapToCSV(){
-  const d=getRekapData();
-  if(!d.length){alert('Belum ada data evaluasi untuk diunduh.');return}
-  const headers=['Waktu Selesai','Nama Lengkap','Kelas / Rombel','Bab Materi','Durasi Pengerjaan','Jawaban Benar','Jawaban Salah','Nilai Akhir (100)','Status Kelulusan'];
-  const rows=d.map(r=>[r.waktu,r.nama,r.kelas,r.bab,r.durasi,r.correct,r.wrong,r.score,r.status]);
+  if(!globalSheetData.length){alert('Belum ada data untuk diunduh.');return}
+  const headers=['Waktu Selesai','Nama Lengkap','Kelas / Rombel','Bab Materi','Durasi Pengerjaan','Benar / Salah','Nilai Akhir (100)','Status Kelulusan'];
+  const rows=globalSheetData.map(r=>[r.waktu,r.nama,r.kelas,r.bab,r.durasi,r.benarSalah,r.score,r.status]);
   const csvContent='\ufeff'+[headers,...rows].map(row=>row.map(val=>`"${String(val??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob=new Blob([csvContent],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download=`Rekap_Evaluasi_Antropologi_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download=`Rekap_GoogleSheets_Antropologi_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-}
-
-function clearAllRekapData(){
-  if(confirm('Hapus seluruh rekap evaluasi lokal? Data yang sudah tersimpan di browser ini akan dikosongkan.')){
-    localStorage.removeItem(STORAGE_KEY);
-    renderTeacherDashboard();
-  }
 }
 
 function downloadReflectionTxt(){
