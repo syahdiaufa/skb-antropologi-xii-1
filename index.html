@@ -620,6 +620,11 @@ function updateTeacherAccessUI(){
 
 function onStudentNameSelected(){
   const c=chapter();
+  if(!isAccessOpenForChapter(c)){
+    $('quiz-nama').value='';
+    checkAccessAndRenderQuiz();
+    return;
+  }
   if(!c.isUAS) return;
   const nama=$('quiz-nama').value.trim();
   if(nama){
@@ -676,6 +681,11 @@ function checkAccessAndRenderQuiz(){
 
   if(!isOpen){
     stopQuestionTimer();
+    if(c.isUAS && !quizSubmitted){
+      uasStarted=false;
+      $('quiz-nama').disabled=false;
+      $('quiz-nama').value='';
+    }
     $('quiz-identity-panel').classList.add('hidden');
     $('uas-start-gate').classList.add('hidden');
     $('quiz-locked-banner').classList.remove('hidden');
@@ -1449,6 +1459,24 @@ function verifyPasswordAction(){
     inputElem.select();
   }
 }
+
+window.addEventListener('storage', (e) => {
+  if(e.key === 'mpi_antropologi_access_bab' || e.key === 'mpi_antropologi_access_uas' || e.key === 'mpi_antropologi_q_timer'){
+    updateTeacherAccessUI();
+    updateStudentAccessBadge();
+    if(currentTab === 'kuis'){
+      checkAccessAndRenderQuiz();
+    }
+  }
+});
+
+window.addEventListener('focus', () => {
+  updateTeacherAccessUI();
+  updateStudentAccessBadge();
+  if(currentTab === 'kuis'){
+    checkAccessAndRenderQuiz();
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const pwdInput = $('modal-password-input');
