@@ -114,14 +114,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
 
   <!-- TAB KUIS EVALUASI (TAMPILAN CAT) -->
   <div id="tab-kuis" class="hidden space-y-5">
-    <div class="panel p-5 no-print">
+    <div id="quiz-identity-panel" class="panel p-5 no-print">
       <div class="flex flex-wrap justify-between gap-3 items-center">
         <div>
-          <div class="text-xs uppercase tracking-widest font-extrabold text-orange-800">Evaluasi Formatif Mandiri (KKM: 75 · Bank Soal 60: Mudah, Sedang, HOTS)</div>
+          <div id="kuis-sub-badge" class="text-xs uppercase tracking-widest font-extrabold text-orange-800">Evaluasi Formatif Mandiri (KKM: 75 · Bank Soal 60: Mudah, Sedang, HOTS)</div>
           <h2 id="kuis-main-heading" class="display text-2xl font-bold">Evaluasi Bab (20 Soal Acak dari 60 Bank Soal) · Sistem CAT</h2>
-          <p class="text-xs text-stone-500 mt-1">Pilih nama Anda di bawah. Hasil evaluasi otomatis tersimpan ke Google Sheets guru.</p>
+          <p id="kuis-sub-desc" class="text-xs text-stone-500 mt-1">Pilih nama Anda di bawah. Hasil evaluasi otomatis tersimpan ke Google Sheets guru.</p>
         </div>
-        <div class="text-right">
+        <div id="quiz-progress-box" class="text-right">
           <div id="quiz-progress-text" class="text-sm font-extrabold text-orange-900">Soal 1 dari 20</div>
           <div class="w-40 bg-stone-200 h-2 rounded-full overflow-hidden mt-1">
             <div id="quiz-progress-bar" class="bg-orange-800 h-full transition-all duration-300" style="width: 2%"></div>
@@ -133,7 +133,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
       <div class="grid sm:grid-cols-2 gap-3 mt-4">
         <div>
           <label class="text-xs font-bold text-stone-500 block mb-1">PILIH NAMA SISWA *</label>
-          <select id="quiz-nama" class="w-full border border-stone-300 rounded-xl p-3 text-sm font-semibold focus:outline-orange-700 bg-white">
+          <select id="quiz-nama" onchange="onStudentNameSelected()" class="w-full border border-stone-300 rounded-xl p-3 text-sm font-semibold focus:outline-orange-700 bg-white">
             <option value="">-- Pilih Nama Siswa Terdaftar --</option>
             <option value="ACHMAD SARIPUDIN">ACHMAD SARIPUDIN</option>
             <option value="ARJAYATI">ARJAYATI</option>
@@ -177,6 +177,51 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f5;color:#292524
         <button onclick="switchStudentTab('materi')" class="px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 text-xs font-bold">
           <i class="fa-solid fa-book-open mr-1"></i> Pelajari Materi Terlebih Dahulu
         </button>
+      </div>
+    </div>
+
+    <!-- LOBBY / GERBANG MASUK SOAL UAS (MUNCUL SETELAH SISWA MEMILIH NAMA) -->
+    <div id="uas-start-gate" class="hidden panel p-7 border-2 border-amber-300 bg-gradient-to-br from-amber-50/90 via-white to-orange-50/70 space-y-5 no-print">
+      <div id="uas-gate-waiting-name" class="text-center py-4 space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 grid place-items-center mx-auto text-xl">
+          <i class="fa-solid fa-user-check"></i>
+        </div>
+        <h3 class="display text-xl font-bold text-stone-900">Tahap 1: Pilih Identitas Peserta UAS</h3>
+        <p class="text-xs sm:text-sm text-stone-600 max-w-md mx-auto">Silakan pilih <b>Nama Siswa</b> Anda pada menu pilihan di atas (Kelas <b>XII</b> terisi otomatis). Setelah nama dipilih, tombol masuk ke ruang soal UAS akan muncul.</p>
+      </div>
+
+      <div id="uas-gate-ready-box" class="hidden space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-amber-200 pb-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white grid place-items-center text-xl shadow-sm">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <div>
+              <span class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-700">Peserta Terverifikasi · Siap Ujian</span>
+              <h3 class="display text-xl sm:text-2xl font-bold text-stone-900" id="uas-participant-name">-</h3>
+              <p class="text-xs text-stone-600">Kelas: <b class="text-stone-900">XII</b> · Paket: <b>Ujian Akhir Semester (Standar TKA SMA)</b></p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="px-3 py-1.5 rounded-xl bg-white border border-stone-200 font-bold text-stone-700"><i class="fa-solid fa-list-ol text-orange-700 mr-1"></i> 30 Soal TKA</span>
+            <span id="uas-gate-timer-info" class="px-3 py-1.5 rounded-xl bg-white border border-stone-200 font-bold text-stone-700"><i class="fa-solid fa-stopwatch text-orange-700 mr-1"></i> 90 Detik / Soal</span>
+            <span class="px-3 py-1.5 rounded-xl bg-white border border-stone-200 font-bold text-stone-700"><i class="fa-solid fa-award text-emerald-700 mr-1"></i> KKM: 75</span>
+          </div>
+        </div>
+
+        <div class="bg-white/90 p-4 rounded-2xl border border-amber-200 text-xs text-stone-700 space-y-1.5 leading-relaxed">
+          <div class="font-extrabold text-amber-900 uppercase tracking-wider"><i class="fa-solid fa-circle-info mr-1"></i> Tata Tertib Pengerjaan UAS Standar TKA:</div>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Soal terdiri atas <b>10 Pilihan Ganda Sederhana (PGS)</b>, <b>10 Pilihan Ganda Kompleks (MCMA)</b>, dan <b>10 Pilihan Ganda Kompleks Kategori (Benar/Salah)</b>.</li>
+            <li>Begitu Anda menekan tombol <b>Mulai Kerjakan UAS Sekarang</b>, seluruh soal dan hitung mundur waktu per soal akan langsung berjalan.</li>
+          </ul>
+        </div>
+
+        <div class="flex justify-end pt-1">
+          <button type="button" onclick="startUasExam()" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-orange-800 to-amber-700 hover:from-orange-700 hover:to-amber-600 text-white font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-play"></i> Masuk & Mulai Soal UAS Sekarang
+          </button>
+        </div>
       </div>
     </div>
 
@@ -459,7 +504,7 @@ const chapters = [{"id": 1, "title": "Antropologi Sosial dan Antropologi Budaya"
 
 let currentChapter=1,currentTab='pengantar',currentRole='siswa';
 let shuffledQuestions=[],currentQuestionIndex=0,userAnswers={},quizStartTime=null,isCatGridOpen=true;
-let questionTimeRemaining=60,questionTimerInterval=null,questionElapsed={},quizSubmitted=false;
+let questionTimeRemaining=60,questionTimerInterval=null,questionElapsed={},quizSubmitted=false,uasStarted=false;
 let globalSheetData=[],pendingModalTarget=null;
 
 function syncRemoteConfig(){
@@ -488,7 +533,7 @@ function pushRemoteConfig(){
   const payload = {
     action: "setConfig",
     babAccess: localStorage.getItem('mpi_antropologi_access_bab') || 'open',
-    uasAccess: localStorage.getItem('mpi_antropologi_access_uas') || 'open',
+    uasAccess: localStorage.getItem('mpi_antropologi_access_uas') || 'closed',
     timerSec: localStorage.getItem('mpi_antropologi_q_timer') || '60'
   };
   fetch(SCRIPT_URL, {
@@ -503,7 +548,7 @@ function isAccessOpenForChapter(c){
   if(!c) c=chapter();
   if(c.isUAS){
     const v=localStorage.getItem('mpi_antropologi_access_uas');
-    return v===null ? true : v==='open';
+    return v===null ? false : v==='open';
   }else{
     const v=localStorage.getItem('mpi_antropologi_access_bab');
     return v===null ? true : v==='open';
@@ -526,8 +571,9 @@ function updateStudentAccessBadge(){
 
 function toggleExamAccess(scope){
   const key = scope==='uas' ? 'mpi_antropologi_access_uas' : 'mpi_antropologi_access_bab';
+  const defaultOpen = (scope==='uas' ? false : true);
   const curr = localStorage.getItem(key);
-  const currentlyOpen = (curr===null ? true : curr==='open');
+  const currentlyOpen = (curr===null ? defaultOpen : curr==='open');
   const nextState = currentlyOpen ? 'closed' : 'open';
   localStorage.setItem(key, nextState);
   updateTeacherAccessUI();
@@ -537,7 +583,7 @@ function toggleExamAccess(scope){
 
 function updateTeacherAccessUI(){
   const babOpen = (localStorage.getItem('mpi_antropologi_access_bab') ?? 'open') === 'open';
-  const uasOpen = (localStorage.getItem('mpi_antropologi_access_uas') ?? 'open') === 'open';
+  const uasOpen = (localStorage.getItem('mpi_antropologi_access_uas') ?? 'closed') === 'open';
 
   const babBadge = $('status-access-bab');
   const babBtn = $('btn-toggle-access-bab');
@@ -572,31 +618,109 @@ function updateTeacherAccessUI(){
   }
 }
 
+function onStudentNameSelected(){
+  const c=chapter();
+  if(!c.isUAS) return;
+  const nama=$('quiz-nama').value.trim();
+  if(nama){
+    $('uas-gate-waiting-name').classList.add('hidden');
+    $('uas-gate-ready-box').classList.remove('hidden');
+    $('uas-participant-name').textContent=nama;
+    const lim=getPerQuestionLimit();
+    $('uas-gate-timer-info').innerHTML=lim>0
+      ? `<i class="fa-solid fa-stopwatch text-orange-700 mr-1"></i> ${lim} Detik / Soal`
+      : `<i class="fa-solid fa-infinity text-orange-700 mr-1"></i> Tanpa Batas Waktu`;
+  }else{
+    $('uas-gate-waiting-name').classList.remove('hidden');
+    $('uas-gate-ready-box').classList.add('hidden');
+  }
+}
+
+function startUasExam(){
+  const nama=$('quiz-nama').value.trim();
+  if(!nama){
+    alert('Silakan pilih Nama Siswa Anda terlebih dahulu!');
+    $('quiz-nama').focus();
+    return;
+  }
+  if(!isAccessOpenForChapter(chapter())){
+    alert('Maaf, akses Ujian Akhir Semester sedang ditutup oleh guru.');
+    checkAccessAndRenderQuiz();
+    return;
+  }
+  uasStarted=true;
+  $('quiz-nama').disabled=true;
+  $('uas-start-gate').classList.add('hidden');
+  $('quiz-progress-box').classList.remove('hidden');
+  $('single-quiz-card').classList.remove('hidden');
+  $('submit-box').classList.remove('hidden');
+  initQuizState();
+  renderCurrentQuestion();
+  startQuestionTimer(true);
+  $('single-quiz-card').scrollIntoView({behavior:'smooth'});
+}
+
 function checkAccessAndRenderQuiz(){
   const c=chapter();
   const isOpen=isAccessOpenForChapter(c);
+
+  if(c.isUAS){
+    $('kuis-sub-badge').textContent='Asesmen Sumatif Akhir Semester · Standar TKA SMA (KKM: 75)';
+    $('kuis-main-heading').textContent='Ujian Akhir Semester (UAS) · Standar TKA SMA';
+    $('kuis-sub-desc').textContent='Pilih nama siswa terlebih dahulu (Kelas XII otomatis), lalu klik tombol Mulai UAS untuk membuka soal dan timer.';
+  }else{
+    $('kuis-sub-badge').textContent='Evaluasi Formatif Mandiri (KKM: 75 · Bank Soal 60: Mudah, Sedang, HOTS)';
+    $('kuis-main-heading').textContent='Evaluasi Bab (20 Soal Acak dari 60 Bank Soal) · Sistem CAT';
+    $('kuis-sub-desc').textContent='Pilih nama Anda di bawah. Hasil evaluasi otomatis tersimpan ke Google Sheets guru.';
+  }
+
   if(!isOpen){
     stopQuestionTimer();
+    $('quiz-identity-panel').classList.add('hidden');
+    $('uas-start-gate').classList.add('hidden');
     $('quiz-locked-banner').classList.remove('hidden');
     $('single-quiz-card').classList.add('hidden');
     $('submit-box').classList.add('hidden');
     $('quiz-result').classList.add('hidden');
     $('quiz-locked-title').textContent=c.isUAS
-      ? 'Akses Ujian Akhir Semester (UAS) Sedang Ditutup'
+      ? 'Akses Ujian Akhir Semester (UAS) Masih Ditutup oleh Guru'
       : `Akses Evaluasi Bab ${c.id} Sedang Ditutup`;
     $('quiz-locked-desc').textContent=c.isUAS
-      ? 'Guru mata pelajaran belum membuka atau telah menutup akses pengerjaan Ujian Akhir Semester (UAS). Silakan tunggu instruksi guru untuk membuka akses.'
-      : `Guru mata pelajaran belum membuka atau telah menutup akses pengerjaan Evaluasi Bab ${c.id}. Silakan pelajari materi terlebih dahulu atau hubungi guru.`;
+      ? 'Menu Ujian Akhir Semester (UAS) saat ini berstatus TUTUP di panel guru. Siswa belum dapat mengakses soal UAS sebelum guru membuka akses pada menu Guru.'
+      : `Guru mata pelajaran belum membuka akses pengerjaan Evaluasi Bab ${c.id}. Silakan pelajari materi terlebih dahulu atau hubungi guru.`;
     return false;
   }
+
   $('quiz-locked-banner').classList.add('hidden');
-  if(!quizSubmitted){
-    $('single-quiz-card').classList.remove('hidden');
-    $('submit-box').classList.remove('hidden');
-    if(!shuffledQuestions.length) initQuizState();
-    renderCurrentQuestion();
-    startQuestionTimer(false);
+  $('quiz-identity-panel').classList.remove('hidden');
+
+  if(quizSubmitted){
+    $('uas-start-gate').classList.add('hidden');
+    $('single-quiz-card').classList.add('hidden');
+    $('submit-box').classList.add('hidden');
+    $('quiz-result').classList.remove('hidden');
+    return true;
   }
+
+  if(c.isUAS && !uasStarted){
+    stopQuestionTimer();
+    $('quiz-nama').disabled=false;
+    $('quiz-progress-box').classList.add('hidden');
+    $('single-quiz-card').classList.add('hidden');
+    $('submit-box').classList.add('hidden');
+    $('quiz-result').classList.add('hidden');
+    $('uas-start-gate').classList.remove('hidden');
+    onStudentNameSelected();
+    return true;
+  }
+
+  $('uas-start-gate').classList.add('hidden');
+  $('quiz-progress-box').classList.remove('hidden');
+  $('single-quiz-card').classList.remove('hidden');
+  $('submit-box').classList.remove('hidden');
+  if(!shuffledQuestions.length) initQuizState();
+  renderCurrentQuestion();
+  startQuestionTimer(false);
   return true;
 }
 
@@ -642,14 +766,20 @@ function init(){
 
 function changeChapter(id){
   currentChapter=Number(id);
+  uasStarted=false;
+  quizSubmitted=false;
+  $('quiz-nama').disabled=false;
   initQuizState();
   $('quiz-result').classList.add('hidden');
-  $('single-quiz-card').classList.remove('hidden');
-  $('submit-box').classList.remove('hidden');
   $('btn-submit-quiz').disabled=false;
   $('btn-submit-quiz').innerHTML='<i class="fa-solid fa-paper-plane mr-2"></i> Kumpulkan Jawaban';
   renderChapter();
-  if(currentTab==='kuis') checkAccessAndRenderQuiz();
+  if(currentTab==='kuis'){
+    checkAccessAndRenderQuiz();
+  }else{
+    $('single-quiz-card').classList.remove('hidden');
+    $('submit-box').classList.remove('hidden');
+  }
 }
 
 function renderChapter(){
@@ -797,7 +927,7 @@ function initQuizState(){
   quizSubmitted=false;
   currentQuestionIndex=0;
   quizStartTime=new Date();
-  if(currentTab==='kuis'){
+  if(currentTab==='kuis' && (!c.isUAS || uasStarted)){
     startQuestionTimer(true);
   }else{
     stopQuestionTimer();
@@ -1235,13 +1365,14 @@ function submitStudentQuiz(){
 }
 
 function ulangiEvaluasi(){
+  uasStarted=false;
+  quizSubmitted=false;
+  $('quiz-nama').disabled=false;
   initQuizState();
   $('quiz-result').classList.add('hidden');
-  $('single-quiz-card').classList.remove('hidden');
-  $('submit-box').classList.remove('hidden');
   $('btn-submit-quiz').disabled=false;
   $('btn-submit-quiz').innerHTML='<i class="fa-solid fa-paper-plane mr-2"></i> Kumpulkan Jawaban';
-  renderCurrentQuestion();
+  checkAccessAndRenderQuiz();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
