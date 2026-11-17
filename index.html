@@ -570,7 +570,9 @@ function submitStudentQuiz(){
   const c=chapter();
   const endTime=new Date();
   const durasi=calculateDuration(quizStartTime,endTime);
-  const waktuString=endTime.toLocaleString('id-ID',{dateStyle:'full',timeStyle:'short'});
+  const pad2=n=>String(n).padStart(2,'0');
+  const waktuStandard=`${endTime.getFullYear()}-${pad2(endTime.getMonth()+1)}-${pad2(endTime.getDate())} ${pad2(endTime.getHours())}:${pad2(endTime.getMinutes())}:${pad2(endTime.getSeconds())}`;
+  const waktuDisplay=endTime.toLocaleString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
   const letters='ABCDE';
 
   const details=shuffledQuestions.map((q,idx)=>{
@@ -596,7 +598,8 @@ function submitStudentQuiz(){
 
   const rec={
     id:Date.now(),
-    waktu:waktuString,
+    waktu:waktuStandard,
+    waktuISO:endTime.toISOString(),
     nama,kelas,
     bab:`Bab ${c.id}: ${c.title}`,
     durasi,
@@ -629,7 +632,7 @@ function submitStudentQuiz(){
         <p><span class="text-stone-500 font-semibold">Bab Evaluasi:</span> Bab ${c.id} (${esc(c.title)})</p>
       </div>
       <div>
-        <p><span class="text-stone-500 font-semibold">Waktu Selesai:</span> ${esc(waktuString)}</p>
+        <p><span class="text-stone-500 font-semibold">Waktu Selesai:</span> ${esc(waktuDisplay)}</p>
         <p><span class="text-stone-500 font-semibold">Durasi Pengerjaan:</span> ${esc(durasi)}</p>
         <p><span class="text-stone-500 font-semibold">Standar KKM:</span> <b class="text-stone-800">75</b></p>
       </div>
@@ -818,6 +821,35 @@ function fetchGoogleSheetsData(){
     });
 }
 
+function formatWaktuPelaksanaan(rawWaktu, rawId){
+  let d = null;
+  if(rawWaktu !== undefined && rawWaktu !== null && String(rawWaktu).trim() !== ''){
+    const s = String(rawWaktu).trim();
+    if(!s.startsWith('1970') && !s.startsWith('1969')){
+      const parsed = new Date(s.includes('T') ? s : s.replace(' ', 'T'));
+      if(!isNaN(parsed.getTime()) && parsed.getFullYear() >= 2020){
+        d = parsed;
+      } else {
+        return s;
+      }
+    }
+  }
+  if(!d && rawId){
+    const numId = Number(rawId);
+    if(!isNaN(numId) && numId > 1577836800000){
+      d = new Date(numId);
+    }
+  }
+  if(d && !isNaN(d.getTime())){
+    const pad2 = n => String(n).padStart(2,'0');
+    const tgl = `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
+    const jam = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+    const hari = d.toLocaleDateString('id-ID', {weekday:'short'});
+    return `${hari}, ${tgl} · ${jam}`;
+  }
+  return String(rawWaktu || '-');
+}
+
 function renderTeacherTable(data){
   $('stat-count').textContent = data.length;
   $('stat-average').textContent = data.length ? Math.round(data.reduce((a,x)=>a+(+x.score||0),0)/data.length) : 0;
@@ -830,7 +862,7 @@ function renderTeacherTable(data){
 
   $('rekap-table-body').innerHTML = data.map(r => `
     <tr class="border-b hover:bg-stone-50">
-      <td class="p-3">${esc(r.waktu)}</td>
+      <td class="p-3 whitespace-nowrap font-medium text-stone-700">${esc(formatWaktuPelaksanaan(r.waktu, r.id))}</td>
       <td class="p-3 font-bold">${esc(r.nama)}</td>
       <td class="p-3">${esc(r.kelas)}</td>
       <td class="p-3">${esc(r.bab)}</td>
@@ -887,7 +919,7 @@ function filterRekapTable(){
 function exportRekapToCSV(){
   if(!globalSheetData.length){alert('Belum ada data untuk diunduh.');return}
   const headers=['Waktu Selesai','Nama Lengkap','Kelas / Rombel','Bab Materi','Durasi Pengerjaan','Benar / Salah','Nilai Akhir (100)','Status Kelulusan'];
-  const rows=globalSheetData.map(r=>[r.waktu,r.nama,r.kelas,r.bab,r.durasi,r.benarSalah,r.score,r.status]);
+  const rows=globalSheetData.map(r=>[formatWaktuPelaksanaan(r.waktu, r.id),r.nama,r.kelas,r.bab,r.durasi,r.benarSalah,r.score,r.status]);
   const csvContent='\ufeff'+[headers,...rows].map(row=>row.map(val=>`"${String(val??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob=new Blob([csvContent],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
